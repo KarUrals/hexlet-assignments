@@ -1,0 +1,17 @@
+plugins {
+  id 'checkstyle'
+}
+
+repositories {
+  mavenCentral()
+}
+
+checkstyle {
+  toolVersion '8.41'
+}
+
+task checkExercises (type: Checkstyle) {
+  source 'exercises/'
+  include '**/*.java'
+  classpath = files()
+}
