@@ -10,13 +10,8 @@ public class SingleTag extends Tag{
 
     @Override
     public String toString() {
-        StringBuilder result = new StringBuilder();
-        result.append("<")
-                .append(name)
-                .append(attributesToString(attributes))
-                .append(">");
 
-        return result.toString();
+        return String.format("<%s%s>", this.name, attributesToString(attributes));
     }
 }
 // END

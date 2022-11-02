@@ -16,10 +16,10 @@ public abstract class Tag {
     public abstract String toString();
 
     public static String attributesToString(Map<String, String> attributes) {
-        String result = attributes.entrySet().stream()
-                .map(entry -> " " + entry.getKey() + "=\"" + entry.getValue() + "\"")
+
+        return attributes.entrySet().stream()
+                .map(entry -> String.format(" %s=\"%s\"", entry.getKey(), entry.getValue()))
                 .collect(Collectors.joining(""));
-        return result;
     }
 }
 // END
