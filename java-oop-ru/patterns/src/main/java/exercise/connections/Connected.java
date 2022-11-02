@@ -5,10 +5,10 @@ import exercise.TcpConnection;
 // BEGIN
 public class Connected implements Connection{
 
-    private TcpConnection tcpConnection;
+    private TcpConnection connection;
 
     public Connected(TcpConnection tcpConnection) {
-        this.tcpConnection = tcpConnection;
+        this.connection = tcpConnection;
     }
 
     @Override
@@ -18,13 +18,13 @@ public class Connected implements Connection{
 
     @Override
     public void write(String str) {
+        connection.addToBuffer(str);
         System.out.println("Value: " + str + " is added to buffer");
     }
 
     @Override
     public void disconnect() {
-        TcpConnection tcpConnection = this.tcpConnection;
-        tcpConnection.setState(new Disconnected(tcpConnection));
+        connection.setState(new Disconnected(connection));
     }
 
     @Override
