@@ -1,12 +1,8 @@
 package exercise;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Files;
-import java.nio.file.StandardOpenOption;
 
 // BEGIN
 public class App {
@@ -15,7 +11,7 @@ public class App {
     }
 
     public static Car extract(Path filePath) throws IOException {
-        return new ObjectMapper().readValue(filePath.toFile(), Car.class);
+        return Car.unserialize(Files.readString(filePath));
     }
 }
 // END

@@ -1,18 +1,13 @@
 package exercise;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
 import lombok.Value;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 
 // BEGIN
-@Getter
-@Setter
-@AllArgsConstructor
+@Value
 // END
 class Car {
     int id;
@@ -26,7 +21,7 @@ class Car {
         return new ObjectMapper().writeValueAsString(this);
     }
 
-    public Car unserialize(String jsonRepresentation) throws IOException {
+    public static Car unserialize(String jsonRepresentation) throws IOException {
         return new ObjectMapper().readValue(jsonRepresentation, Car.class);
     }
     // END

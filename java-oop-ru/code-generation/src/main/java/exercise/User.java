@@ -1,11 +1,9 @@
 package exercise;
 
-import lombok.*;
+import lombok.Value;
 
 // BEGIN
-@Getter
-@Setter
-@AllArgsConstructor
+@Value
 // END
 class User {
     int id;
