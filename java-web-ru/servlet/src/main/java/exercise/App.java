@@ -26,8 +26,8 @@ public class App {
         Context ctx = app.addContext("", new File(".").getAbsolutePath());
 
         // BEGIN
-        app.addServlet(ctx, "WelcomeServlet", new WelcomeServlet());
-        ctx.addServletMappingDecoded("/", "WelcomeServlet");
+        app.addServlet(ctx, WelcomeServlet.class.getSimpleName(), new WelcomeServlet());
+        ctx.addServletMappingDecoded("", WelcomeServlet.class.getSimpleName());
         // END
 
         return app;
