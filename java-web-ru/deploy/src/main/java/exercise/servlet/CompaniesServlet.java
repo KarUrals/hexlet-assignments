@@ -31,7 +31,7 @@ public class CompaniesServlet extends HttpServlet {
             }
         }
 
-        if (!param.equals("")) {
+        if (query != null && !param.equals("")) {
             List<String> filteredCompanies = new ArrayList<>();
 
             for (String company : companies) {
