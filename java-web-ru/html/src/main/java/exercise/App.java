@@ -49,17 +49,5 @@ public class App {
         Tomcat app = getApp(getPort());
         app.start();
         app.getServer().await();
-//        System.out.println("Hello");
-//        String filePath = "src/main/resources/users.json";
-//        Path absolutePath = Paths.get(filePath).toAbsolutePath().normalize();
-//        String jsonUserArrayString = Files.readString(absolutePath);
-//
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        List<User> list = objectMapper.readValue(jsonUserArrayString, new TypeReference<>() {
-//        });
-//
-//        for (User user : list) {
-//            System.out.println(user.getFirstName());
-//        }
     }
 }

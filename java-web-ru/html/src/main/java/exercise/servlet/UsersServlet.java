@@ -60,11 +60,10 @@ public class UsersServlet extends HttpServlet {
         body.append("""
                 <!DOCTYPE html>
                 <html lang=\"ru\">
-                    <head>
-                        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+                    <head>                        
                         <meta charset=\"UTF-8\">
-                        <title>Example application | Users</title>
-                        <link rel=\"stylesheet\" href=\"mysite.css\">
+                        <title>Example application | User</title>
+                        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
                     </head>
                     <body>
                         <table>
@@ -73,10 +72,10 @@ public class UsersServlet extends HttpServlet {
 
 
         for (User user : getUsers()) {
-//            body.append("<tr><td>" + user.getId() + "</td><td>" + user.getFirstName() + " " + user.getLastName() + "</td></tr>");
             body.append("<tr><td>" + user.getId() +
                     "</td><td><a href=\"/users/" + user.getId() + "\">" + user.getFirstName() + " " + user.getLastName() + "</a></td></tr>");
         }
+
         body.append("""
                     </body>
                 </html>
@@ -98,11 +97,10 @@ public class UsersServlet extends HttpServlet {
         body.append("""
                 <!DOCTYPE html>
                 <html lang=\"ru\">
-                    <head>
-                        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+                    <head>                        
                         <meta charset=\"UTF-8\">
                         <title>Example application | User</title>
-                        <link rel=\"stylesheet\" href=\"mysite.css\">
+                        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
                     </head>
                     <body>
                         <table>
@@ -124,6 +122,7 @@ public class UsersServlet extends HttpServlet {
 
         if (!userFound) {
             response.sendError(404, "Not found");
+            return;
         }
 
         response.setContentType("text/html;charset=UTF-8");
