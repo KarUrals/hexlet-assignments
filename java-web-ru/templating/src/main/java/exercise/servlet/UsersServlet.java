@@ -139,7 +139,7 @@ public class UsersServlet extends HttpServlet {
         }
         // BEGIN
         users.remove(user);
-        showUsers(request, response);
+        response.sendRedirect("/users");
         // END
 
     }
