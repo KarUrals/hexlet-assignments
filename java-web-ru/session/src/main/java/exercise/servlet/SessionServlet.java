@@ -60,18 +60,21 @@ public class SessionServlet extends HttpServlet {
         String email = request.getParameter("email");
         String password = request.getParameter("password");
         Map<String, String> user = users.findByEmail(email);
+        Map<String, String> userEmail = users.build(email);
 
-        if (users.getAll().contains(user) && password.equals(user.get("password"))) {
-            session.setAttribute("userId", user.get("id"));
-            session.setAttribute("flash", "Вы успешно вошли");
-            response.sendRedirect("/");
-        } else {
+        if (user == null || !user.get("password").equals(password)) {
             RequestDispatcher requestDispatcher = request.getRequestDispatcher("/login.jsp");
-            session.setAttribute("user", user);
+            request.setAttribute("user", userEmail);
             session.setAttribute("flash", "Неверные логин или пароль");
             response.setStatus(422);
             requestDispatcher.forward(request, response);
+            return;
         }
+
+        session.setAttribute("userId", user.get("id"));
+        session.setAttribute("flash", "Вы успешно вошли");
+        response.sendRedirect("/");
+
         // END
     }
 
