@@ -13,9 +13,9 @@
     <th>Содержание статьи</th>
     </thead>
     <tbody>
-    <tr>
-      <td th:text="${title}"></td>
-      <td th:text="${body}"></td>
+    <tr th:object="${article}">
+      <td th:text="*{title}"></td>
+      <td th:text="*{body}"></td>
     </tr>
   </table>
   <!-- END -->

@@ -62,18 +62,21 @@ public class ArticlesServlet extends HttpServlet {
         ServletContext context = request.getServletContext();
         Connection connection = (Connection) context.getAttribute("dbConnection");
         // BEGIN
-        String offset = request.getParameter("page");
-        if (offset == null) {
-            offset = "1";
-        }
-        int currentPage = Integer.parseInt(offset);
+        int articlesPerPage = 10;
+
+        String page = request.getParameter("page");
+
+        int currentPage = page == null ? 1 : Integer.parseInt(page);
+        int offset = (currentPage - 1) * articlesPerPage;
+
         List<Map<String, String>> articles = new ArrayList<>();
 
-        String query = "SELECT id, title FROM articles ORDER BY id LIMIT 10 OFFSET ?";
+        String query = "SELECT id, title FROM articles ORDER BY id LIMIT ? OFFSET ?";
 
         try {
             PreparedStatement statement = connection.prepareStatement(query);
-            statement.setInt(1, Integer.parseInt(offset) * 10 - 10);
+            statement.setInt(1, articlesPerPage);
+            statement.setInt(2, offset);
             ResultSet rs = statement.executeQuery();
 
             while (rs.next()) {
@@ -87,10 +90,8 @@ public class ArticlesServlet extends HttpServlet {
             return;
         }
         int nextPage = currentPage + 1;
-        int prevPage = currentPage - 1;
-        if (prevPage < 1) {
-            prevPage = 1;
-        }
+        int prevPage = currentPage < 2 ? 1 : currentPage - 1;
+
         request.setAttribute("prev", prevPage);
         request.setAttribute("next", nextPage);
         request.setAttribute("articles", articles);
@@ -106,31 +107,31 @@ public class ArticlesServlet extends HttpServlet {
         Connection connection = (Connection) context.getAttribute("dbConnection");
         // BEGIN
         String id = getId(request);
-        if (Integer.parseInt(id) > 100) {
-            response.sendError(HttpServletResponse.SC_NOT_FOUND);
-            return;
-        }
 
-        String query = "SELECT * FROM articles WHERE id = ?";
+        Map<String, String> article = new HashMap<>();
 
-        String title = null;
-        String body = null;
+        String query = "SELECT * FROM articles WHERE id=?";
 
         try {
             PreparedStatement statement = connection.prepareStatement(query);
-            statement.setInt(1, Integer.parseInt(id));
+            statement.setString(1, id);
             ResultSet rs = statement.executeQuery();
-            while (rs.next()) {
-                title = rs.getString(2);
-                body = rs.getString(3);
+
+            if (!rs.first()) {
+                response.sendError(HttpServletResponse.SC_NOT_FOUND);
+                return;
             }
+
+            article.put("title", rs.getString("title"));
+            article.put("body", rs.getString("body"));
+
+
         } catch (SQLException e) {
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             return;
         }
 
-        request.setAttribute("title", title);
-        request.setAttribute("body", body);
+        request.setAttribute("article", article);
         // END
         TemplateEngineUtil.render("articles/show.html", request, response);
     }
