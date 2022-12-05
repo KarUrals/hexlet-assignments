@@ -51,14 +51,18 @@ public final class App {
         app.routes(() -> {
             path("articles", () -> {
                 get(ArticleController.listArticles);
-                get("new", ArticleController.newArticle);
                 post(ArticleController.createArticle);
-                get("{id}", ArticleController.showArticle);
+                get("new", ArticleController.newArticle);
                 path("{id}", () -> {
-                    get("edit", ArticleController.editArticle);
-                    post("edit", ArticleController.updateArticle);
-                    get("delete", ArticleController.deleteArticle);
-                    post("delete", ArticleController.destroyArticle);
+                    get(ArticleController.showArticle);
+                    path("edit", () -> {
+                        get(ArticleController.editArticle);
+                        post(ArticleController.updateArticle);
+                    });
+                    path("delete", () -> {
+                        get(ArticleController.deleteArticle);
+                        post(ArticleController.destroyArticle);
+                    });
                 });
             });
         });
