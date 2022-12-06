@@ -42,9 +42,13 @@ public class UserController implements CrudHandler {
     public void create(Context ctx) {
 
         // BEGIN
-        String body = ctx.body();
-
-        User user = DB.json().toBean(User.class, body);
+        User user = ctx.bodyValidator(User.class)
+                .check(it -> it.getFirstName().length() > 0, "First name can not be empty")
+                .check(it -> it.getLastName().length() > 0, "Last name can not be empty")
+                .check(it -> EmailValidator.getInstance().isValid(it.getEmail()), "Should be valid email")
+                .check(it -> StringUtils.isNumeric(it.getPassword()), "Password must contains only digits")
+                .check(it -> it.getPassword().length() >= 4, "Password must contain at least 4 characters")
+                .get();
 
         user.save();
         // END
@@ -63,11 +67,9 @@ public class UserController implements CrudHandler {
 
     public void delete(Context ctx, String id) {
         // BEGIN
-        User user = new QUser()
+        new QUser()
                 .id.equalTo(Integer.parseInt(id))
-                .findOne();
-
-        user.delete();
+                .delete();
         // END
     };
 }
