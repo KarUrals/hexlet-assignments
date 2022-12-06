@@ -74,7 +74,7 @@ public final class UserController {
             ctx.attribute("errors", errors);
             User invalidUser = new User(name, lastName, email, password);
             ctx.attribute("user", invalidUser);
-            ctx.render("users/new");
+            ctx.render("users/new.html");
             return;
         }
 
