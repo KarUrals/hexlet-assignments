@@ -25,7 +25,7 @@ class AppTest {
     @BeforeAll
     public static void beforeAll() {
         app = App.getApp();
-        app.start();
+        app.start(0);
         int port = app.port();
 
         baseUrl = "http://localhost:" + port;
@@ -131,6 +131,7 @@ class AppTest {
         assertThat(content).contains(lastName);
         assertThat(content).contains(email);
         assertThat(content).contains(password);
+        assertThat(content).contains("Фамилия не должна быть пустой");
     }
 
     @Test
@@ -162,6 +163,7 @@ class AppTest {
         assertThat(content).contains(lastName);
         assertThat(content).contains(email);
         assertThat(content).contains(password);
+        assertThat(content).contains("Имя не должно быть пустым");
     }
 
     @Test
@@ -193,6 +195,7 @@ class AppTest {
         assertThat(content).contains(lastName);
         assertThat(content).contains(email);
         assertThat(content).contains(password);
+        assertThat(content).contains("Должно быть валидным email");
     }
 
     @Test
@@ -224,6 +227,7 @@ class AppTest {
         assertThat(content).contains(lastName);
         assertThat(content).contains(email);
         assertThat(content).contains(password);
+        assertThat(content).contains("Пароль должен содержать не менее 4 символов");
     }
     // END
 }
