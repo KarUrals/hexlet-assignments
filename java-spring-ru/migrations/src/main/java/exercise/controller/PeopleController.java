@@ -29,20 +29,14 @@ public class PeopleController {
     // BEGIN
     @GetMapping(path = "")
     public List<Map<String, Object>> getAllPersons() {
-        String sql = "SELECT * FROM person";
-        List<Map<String, Object>> rows = jdbc.queryForList(sql);
-        return rows;
+        String sql = "SELECT first_name, last_name FROM person";
+        return jdbc.queryForList(sql);
     }
 
     @GetMapping(path = "/{id}")
-    public List<Map<String, Object>> getPerson(@PathVariable("id") String id) {
-        String sql = "SELECT * FROM person WHERE id = ?";
-//        return jdbc.queryForObject(
-//                query, new Object[]{id}, String.class);
-//        return (String) jdbc.queryForObject(sql, new Object[]{id}, new BeanPropertyRowMapper(Object.class));
-//        return id;
-        List<Map<String, Object>> row = jdbc.queryForList(sql, id);
-        return row;
+    public Map<String, Object> getPerson(@PathVariable("id") String id) {
+        String sql = "SELECT first_name, last_name FROM person WHERE id = ?";
+        return jdbc.queryForMap(sql, id);
     }
     // END
 }
