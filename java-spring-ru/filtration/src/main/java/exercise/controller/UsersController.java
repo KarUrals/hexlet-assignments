@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.GetMapping;
 
 // Зависимости для самостоятельной работы
-// import org.springframework.data.querydsl.binding.QuerydslPredicate;
-// import com.querydsl.core.types.Predicate;
+ import org.springframework.data.querydsl.binding.QuerydslPredicate;
+ import com.querydsl.core.types.Predicate;
 
 @RestController
 @RequestMapping("/users")
@@ -21,15 +21,20 @@ public class UsersController {
     private UserRepository userRepository;
 
     // BEGIN
-    @GetMapping(path = "")
-    public Iterable<User> findUsers(
-            @RequestParam(defaultValue = "") String firstName,
-            @RequestParam(defaultValue = "") String lastName) {
+//    @GetMapping(path = "")
+//    public Iterable<User> findUsers(
+//            @RequestParam(defaultValue = "") String firstName,
+//            @RequestParam(defaultValue = "") String lastName) {
+//
+//        BooleanExpression firstNameExpression = QUser.user.firstName.containsIgnoreCase(firstName);
+//        BooleanExpression lastNameExpression = QUser.user.lastName.containsIgnoreCase(lastName);
+//        return this.userRepository.findAll(firstNameExpression.and(lastNameExpression));
+//    }
 
-        BooleanExpression firstNameExpression = QUser.user.firstName.containsIgnoreCase(firstName);
-        BooleanExpression lastNameExpression = QUser.user.lastName.containsIgnoreCase(lastName);
-        return this.userRepository.findAll(firstNameExpression.and(lastNameExpression));
-    }
+     @GetMapping(path = "")
+     public Iterable<User> getUsers(@QuerydslPredicate(root = User.class) Predicate predicate) {
+         return userRepository.findAll(predicate);
+     }
     // END
 }
 
