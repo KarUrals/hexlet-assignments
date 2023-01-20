@@ -47,53 +47,30 @@ public class CityController {
     }
 
     @GetMapping(path = "/search")
-    public List<Map<String, String>> getCities(@RequestParam(defaultValue = "test") String name) {
+    public List<Map<String, String>> getCities(@RequestParam(defaultValue = "") String name) {
         List<City> cities = new ArrayList<>();
-        if (name.equals("test")) {
+        if (name.equals("")) {
             cities = cityRepository.findByOrderByNameAsc();
         } else {
             cities = cityRepository.findByNameStartingWithIgnoreCase(name);
         }
 
-        List<City> filteredCities = cityRepository.findByNameStartingWithIgnoreCase(name);
-        List<City> orderedCities = cityRepository.findByOrderByNameAsc();
-//        Map<String, String> filteredCities = cities.stream()
-//        List<City> orderedCities = cityRepository.findByOrderByNameAsc();
-//        if (name == null) {
-//            return orderedCities;
-//        } else {
-//            return filteredCities;
-//        }
+        List<Map<String, String>> citiesWithWeather = cities.stream()
+                .map(city -> {
+                    ObjectMapper mapper = new ObjectMapper();
+                    Map<String, String> weather = new HashMap<>();
+                    try {
+                        weather = mapper.readValue(weatherService.getWeatherInCity(city.getName()), Map.class);
+                    } catch (JsonProcessingException e) {
+                        throw new RuntimeException(e);
+                    }
+                    return Map.of(
+                            "temperature", weather.get("temperature"),
+                            "name", weather.get("name"));
+                })
+                .collect(Collectors.toList());
 
-        List<Map<String, String>> rList = new ArrayList<>();
-        for (City city : cities) {
-            Map<String, String> rMap = new HashMap<>();
-            String cityName = city.getName();
-            String info = weatherService.getWeatherInCity(cityName);
-
-            ObjectMapper mapper = new ObjectMapper();
-            Map<String, String> weather = new HashMap<>();
-            try {
-                weather = mapper.readValue(info, Map.class);
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
-            }
-
-            String temp = weather.get("temperature");
-            rMap.put("temperature", temp);
-            rMap.put("name", cityName);
-
-            rList.add(rMap);
-        }
-
-        return rList;
-    }
-
-    @GetMapping(path = "/1")
-    public List<City> get() {
-        List<City> orderedCities = cityRepository.findByOrderByNameAsc();
-
-        return orderedCities;
+        return citiesWithWeather;
     }
     // END
 }

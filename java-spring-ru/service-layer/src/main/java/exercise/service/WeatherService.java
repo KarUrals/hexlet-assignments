@@ -28,9 +28,8 @@ public class WeatherService {
     // BEGIN
     public String getWeatherInCity(String cityName) {
         String url = "http://weather/api/v2/cities/" + cityName;
-        String respons = client.get(url);
 
-        return respons;
+        return client.get(url);
     }
     // END
 }
