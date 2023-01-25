@@ -22,27 +22,9 @@ public class MinThread extends Thread {
     }
 
     private void findMin(int[] numbers) {
-//        int min = numbers[0];
 
-//        Arrays.sort(numbers);
-//        this.minNumber = numbers[0];
-
-//        OptionalInt minimal = Arrays.stream(numbers).min();
-//
-//        for (int i = 0; i < numbers.length; i++) {
-//            if (numbers[i] < min) {
-//                min = numbers[i];
-//            }
-//        }
-//
-//        this.minNumber = minimal;
-        int minValue = numbers[0];
-        for(int i=1;i<numbers.length;i++){
-            if(numbers[i] < minValue){
-                minValue = numbers[i];
-            }
-        }
-        this.minNumber = minValue;
+        Arrays.sort(numbers);
+        this.minNumber = numbers[0];
     }
 }
 // END
