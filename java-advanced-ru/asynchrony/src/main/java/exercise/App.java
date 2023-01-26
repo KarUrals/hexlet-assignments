@@ -1,16 +1,10 @@
 package exercise;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.NoSuchFileException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 
 class App {
 
@@ -20,60 +14,48 @@ class App {
         CompletableFuture<String> file1 = CompletableFuture.supplyAsync(() -> {
             Path filePath1 = Paths.get(sourcePath1).toAbsolutePath().normalize();
 
-            if (Files.exists((filePath1))) {
-                try {
-                    return Files.readString(filePath1);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            } else try {
-                throw new NoSuchFileException(sourcePath2);
-            } catch (NoSuchFileException e) {
+            String content = "";
+
+            try {
+                content = Files.readString(filePath1);
+            } catch (Exception e) {
                 throw new RuntimeException(e);
             }
+            return content;
         });
 
         System.out.println("Read file2");
         CompletableFuture<String> file2 = CompletableFuture.supplyAsync(() -> {
             Path filePath2 = Paths.get(sourcePath2).toAbsolutePath().normalize();
 
-            if (Files.exists((filePath2))) {
-                try {
-                    return Files.readString(filePath2);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            } else try {
-                throw new NoSuchFileException(sourcePath1);
-            } catch (NoSuchFileException e) {
+            String content = "";
+
+            try {
+                content = Files.readString(filePath2);
+            } catch (Exception e) {
                 throw new RuntimeException(e);
             }
+            return content;
         });
 
         System.out.println("Union files");
-        CompletableFuture<String> unionFile = file1.thenCombine(file2, (content1, content2) -> {
-            String unionString = content1 + content2;
+        Path filePath = Paths.get(destPath).toAbsolutePath().normalize();
 
-            Path filePath = Paths.get(destPath).toAbsolutePath().normalize();
-            File file = new File(filePath.toString());
-
+        return file1.thenCombine(file2, (cont1, cont2) -> {
+            String union = cont1 + cont2;
             try {
-                FileWriter fileWriter = new FileWriter(file);
-                fileWriter.write(unionString);
-                fileWriter.close();
-                return unionString;
-            } catch (IOException e) {
+                Files.writeString(filePath, union, StandardOpenOption.CREATE);
+            } catch (Exception e) {
                 throw new RuntimeException(e);
             }
+            return "ok!";
             // Обработка исключений
             // Если при работе задач возникли исключения
             // их можно обработать в методе exceptionally
         }).exceptionally(ex -> {
             System.out.println("Oops! We have an exception - " + ex.getMessage());
-            return null;
+            return "Unknown!";
         });
-
-        return unionFile;
     }
 
     public static CompletableFuture<Long> getDirectorySize(String path) {
