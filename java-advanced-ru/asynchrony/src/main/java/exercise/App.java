@@ -31,22 +31,6 @@ class App {
             } catch (NoSuchFileException e) {
                 throw new RuntimeException(e);
             }
-
-//            return null;
-
-//            if (!Files.exists(filePath1)) {
-//                try {
-//                    throw new NoSuchFileException("file not found");
-//                } catch (NoSuchFileException e) {
-//                    throw new RuntimeException(e);
-//                }
-//            }
-
-//            try {
-//                return Files.readString(filePath1);
-//            } catch (IOException e) {
-//                throw new RuntimeException(e);
-//            }
         });
 
         System.out.println("Read file2");
@@ -64,16 +48,7 @@ class App {
             } catch (NoSuchFileException e) {
                 throw new RuntimeException(e);
             }
-
-//            return null;
-//            try {
-//                return Files.readString(filePath2);
-//            } catch (IOException e) {
-//                throw new RuntimeException(e);
-//            }
         });
-
-
 
         System.out.println("Union files");
         CompletableFuture<String> unionFile = file1.thenCombine(file2, (content1, content2) -> {
@@ -90,27 +65,40 @@ class App {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-
-
-////            Path filePath = Paths.get(destPath).toAbsolutePath().normalize();
-//            BufferedWriter bw = null;
-//            try {
-//                bw = Files.newBufferedWriter(filePath, StandardCharsets.UTF_8);
-//                bw.write(unionString);
-//                return unionString;
-//            } catch (IOException e) {
-//                throw new RuntimeException(e);
-//            }
-//
-//            // Обработка исключений
-//            // Если при работе задач возникли исключения
-//            // их можно обработать в методе exceptionally
+            // Обработка исключений
+            // Если при работе задач возникли исключения
+            // их можно обработать в методе exceptionally
         }).exceptionally(ex -> {
             System.out.println("Oops! We have an exception - " + ex.getMessage());
             return null;
         });
 
         return unionFile;
+    }
+
+    public static CompletableFuture<Long> getDirectorySize(String path) {
+        return CompletableFuture.supplyAsync(() -> {
+            Long size;
+            try {
+                size = Files.walk(Paths.get(path).toAbsolutePath().normalize(), 1)
+                        .filter(Files::isRegularFile)
+                        .mapToLong(p -> {
+                            try {
+                                return Files.size(p);
+                            } catch (Exception e) {
+                                throw new RuntimeException(e);
+                            }
+                        })
+                        .sum();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            return size;
+
+        }).exceptionally(ex -> {
+            System.out.println("Oops! We have an exception - " + ex.getMessage());
+            return null;
+        });
     }
     // END
 
@@ -120,7 +108,6 @@ class App {
         String sourceFile2 = "src/main/resources/file2.txt";
         String destFile = "src/main/resources/result.txt";
         App.unionFiles(sourceFile1, sourceFile2, destFile);
-
         // END
     }
 }
